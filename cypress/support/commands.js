@@ -23,3 +23,22 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', (login,senha) =>{
+
+    cy.visit(Cypress.env('url'))
+    // type
+    cy.get('#username').should('be.visible').type(login)
+    cy.get('#password').should('be.visible').type(senha, {log:false})
+    // interception
+    cy.intercept('GET', 'https://studion-identity-keycloak.hom.dotgroup.com.br/auth/realms/validacao-conteudos/account').as('waitlogin')
+        // click
+    cy.get('#login-btn').should('be.visible').click()
+    cy.wait('@waitlogin')
+    // assertion 
+    //cy.get('.dashboard-header-title').should('have.text', 'Olá, Laura Gomes!')
+    cy.contains('Olá, Laura Gomes!')
+
+})  
+    
+    
